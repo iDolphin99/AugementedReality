@@ -1,21 +1,7 @@
-// Add simple mouse event ! 
-// 1. put 300 x 300 component
-// 2. getElementId -> addEventListener -> 300 x 300 영역에서만 event 발생 
-// 하지만 전체 화면을 클릭할 때 글자가 바뀌도록 event 처리 
-//document.addEventListener("click", modifyText, false);
-
-//function modifyText() {
-//    const t2 = document.getElementById("mytest");
-//    t2.textContent = "^^";
-//}
-
-
-import { Sphere } from 'three';
-import { CubeCamera } from 'three';
 // js is runtime interpreter
 // 그래서 위에서 부터 실행하다가 오류가 나면 거기서부터 실행 안함 
 // How to import three.js library on javascript? -> node_modules... 이런식으로 
-// How to drawing lines with three.js lib? 
+// How to drawing lines with three.js lib?
 import * as THREE from './node_modules/three/build/three.module.js';
 
 // drawing lines 
@@ -55,7 +41,7 @@ const line = new THREE.Line( geometry, material );
 // line object 의 default value = Identity matrix를 의미 
 // 즉 그래서 정리하자면 line.position, line.lookat은 line object의 OS 자체의 보는 방향, 위치를 바꿔주는 것임 
 // line object가 OS상에서 보는 방향이 어디인가? = line.lookat
-line.position(0, 5, 0);
+line.position.set(0, 5, 0);
 line.up.set(0, 1, 0);
 line.lookAt(0, 0, -1);
 // World 중심의 y축 방향으로 5만큼 이동한다면? 하지만 변화가 없음 
@@ -101,13 +87,16 @@ function animate() {
     renderer.render(scene, camera);
 }
 
+// Add simple mouse event ! 
+// 1. put 300 x 300 component
+// 2. getElementId -> addEventListener -> 300 x 300 영역에서만 event 발생 
+// 하지만 전체 화면을 클릭할 때 글자가 바뀌도록 event 처리 
+document.addEventListener("click", modifyText, false);
 
-//document.addEventListener("click", modifyText, false);
-
-//function modifyText() {
-//    const t2 = document.getElementById("mytest");
-//    t2.textContent = "^^";
-//}
+function modifyText() {
+    const t2 = document.getElementById("mytest");
+    t2.textContent = "^^";
+}
 
 // e.g.,
 // cube matrix에 sphere matrix 값을 똑같이 넣어주고 싶음 
