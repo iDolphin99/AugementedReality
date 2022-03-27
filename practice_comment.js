@@ -2,7 +2,7 @@
 // 그래서 위에서 부터 실행하다가 오류가 나면 거기서부터 실행 안함 
 // How to import three.js library on javascript? -> node_modules... 이런식으로 
 // How to drawing lines with three.js lib?
-import * as THREE from './node_modules/three/build/three.module.js';
+import * as THREE from '../node_modules/three/build/three.module.js';
 
 // drawing lines 
 const renderer = new THREE.WebGLRenderer();
@@ -52,8 +52,8 @@ line.lookAt(0, 0, -1);
 // x축 방향으로 -70도 돌리고 postion 자체를 올렷을 때 위에서 line.position(0,5,0)과 같은 output이 나옴 
 // 그리고 line.position.set(0,5,0)로 옮기고 싶으면 lookat도 같이 옮겨줘야 함 line.lookat(0, 5, -1)
 line.matrixAutoUpdate = false;
-let mat_r = new THREE.Matrix4().makeRotationX(THREE.MathUtils.degToRad(-70));
-line.matrix = new THREE.Matrix4().makeTranslation(0, 5, 0);
+let mat_rr = new THREE.Matrix4().makeRotationX(THREE.MathUtils.degToRad(-40));
+line.matrix = new THREE.Matrix4().makeTranslation(0, 0, 80);
 //line.matrix = new THREE.Matrix4().makeTranslation(0, 0, 0).multiply(mat_r);
 
 // geometry algbra가 익숙하지 않을 경우 three.js 의 helper를 지원하지만 쓰지 마시길 바랍니다 
@@ -62,19 +62,20 @@ line.matrix = new THREE.Matrix4().makeTranslation(0, 5, 0);
 // 하지만 모든 코딩은 명시적으로 하셔야 합니다! (see upper code line)
 
 /* box example */  
-const texture = new THREE.TextureLoader().load();
+//const texture = new THREE.TextureLoader('./test.png').load();
 const geo_box = new THREE.BoxGeometry(5, 5, 5);
-const material_box = new THREE.LineBasicMaterial({}); // 선이 아니면 mesh를 사용한다! 
+const material_box = new THREE.MeshPhongMaterial({ color : 0xFFFFFF, emissive : 0x101000, specular : 0xFF0000, shininess : 1000}); // 선이 아니면 mesh를 사용한다! 
 const boxObj = new THREE.Mesh(geo_box, material_box);
 
 boxObj.matrixAutoUpdate = false;
 // rotation에 의해서 box가 돌아간 것을 인지할 수 있음 
-//let mat_r = new THREE.Matrix4.makeRotationX(three.MathUtils.degToRad(-40));
+let mat_r = new THREE.Matrix4.makeRotationX(three.MathUtils.degToRad(-40));
 boxObj.matrix = new THREE.Matrix4().makeTranslation(0, 0, 80);//.multiply(mat_r);
 
+const light = new THREE.DirectionalLight(0xffffff, 0.5);  // light, intenserty, 1이면 full 흰색 
+
+scene.add(light); // light을 반영하기 위해서는 scene에 넣어야죵 
 scene.add(boxObj); 
-
-
 // default model transform matrix : identity matrix, 즉 World space의 postion 그대로 들어감 
 scene.add(line);
 renderer.render(scene, camera); 
