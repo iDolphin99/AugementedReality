@@ -1,3 +1,4 @@
+// OS --- model T ---> WS --- view T ---> CS --- projection T ---> PS --- viewport T ---> SS 
 import * as THREE from '../node_modules/three/build/three.module.js';
 
 const renderer = new THREE.WebGLRenderer();
@@ -8,13 +9,13 @@ document.body.appendChild( renderer.domElement );
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 ); 
-camera.position.set( 0, 0, 20 );
+camera.position.set( 0, 0, 10 ); // original = 20 
 camera.lookAt( 0, 0, 0 ); 
 camera.up.set(0,1,0);   
 
 /* box object */  
 const texture = new THREE.TextureLoader().load('test.jpg');
-const geo_box = new THREE.BoxGeometry(5, 5, 5); //color : 0xFFFFFF, emissive : 0x101000, specular : 0xFF0000, shininess : 1000
+const geo_box = new THREE.BoxGeometry(1, 1, 1); //color : 0xFFFFFF, emissive : 0x101000, specular : 0xFF0000, shininess : 1000
 const material_box = new THREE.MeshBasicMaterial({map:texture}); 
 const boxObj = new THREE.Mesh(geo_box, material_box);
 let isCtrl = 0;
@@ -32,6 +33,11 @@ function onDocumentKeyDown(event) {
     let mat_r; 
     let vec_pos = new THREE.Vector3();
 
+    // object.localToworld(point) : For a point in object's local space, this function will return the world coordinate of the point 
+    let a = boxObj.localToWorld(new THREE.Vector3()).project(camera);
+    console.log((a.x+1)/2*window.innerWidth);
+    console.log(obj_mat);
+
     let keyCode = event.which;
     switch (keyCode) {
         case 17 : // ctrl : convert the way to rotate object
@@ -39,22 +45,22 @@ function onDocumentKeyDown(event) {
             break;
         case 87 : // w : move 10 px to the up
             vec_pos.setFromMatrixPosition(obj_mat);
-            vec_pos.y += 10; 
+            vec_pos.y += 0.05; 
             boxObj.matrix.copy(obj_mat.setPosition(vec_pos));
             break;
         case 83 : // s : move 10 px to the down
             vec_pos.setFromMatrixPosition(obj_mat);
-            vec_pos.y -= 10; 
+            vec_pos.y -= 0.05; 
             boxObj.matrix.copy(obj_mat.setPosition(vec_pos));
             break;
         case 65 : // a : move 10 px to the left
             vec_pos.setFromMatrixPosition(obj_mat);
-            vec_pos.x -= 1; 
+            vec_pos.x -= 0.05; 
             boxObj.matrix.copy(obj_mat.setPosition(vec_pos));
             break;
         case 68 : // d : move 10 px to the right
             vec_pos.setFromMatrixPosition(obj_mat);
-            vec_pos.x += 1; 
+            vec_pos.x += 0.05; 
             boxObj.matrix.copy(obj_mat.setPosition(vec_pos));
             break;
         case 32 : // space - move to origin, return to origin 
