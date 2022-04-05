@@ -1,4 +1,3 @@
-// OS --- model T ---> WS --- view T ---> CS --- projection T ---> PS --- viewport T ---> SS 
 import * as THREE from '../node_modules/three/build/three.module.js';
 
 const renderer = new THREE.WebGLRenderer();
@@ -9,7 +8,7 @@ document.body.appendChild( renderer.domElement );
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 ); 
-camera.position.set( 0, 0, 10 ); // original = 20 
+camera.position.set( 0, 0, 5 ); // original = 20 
 camera.lookAt( 0, 0, 0 ); 
 camera.up.set(0,1,0);   
 
@@ -23,6 +22,16 @@ let isCtrl = 0;
 /* light */ 
 const light = new THREE.DirectionalLight(0xFFFFFF, 0.5); // color, intensity  
 
+/* 10px */
+let ScreenToCamera = new THREE.Vector3(10/ window.innerWidth * 2 - 1, 0 / window.innerHeight * 2 + 1, -1).unproject(camera); // vector from near plane(camer space)
+let ScreenToCamera2 = new THREE.Vector3(0/ window.innerWidth * 2 - 1, 0 / window.innerHeight * 2 + 1, -1).unproject(camera); // vector from near plane(camer space)
+let cameraToWorld = new THREE.Vector3();
+let objectToWorld = new THREE.Vector3();
+camera.localToWorld(cameraToWorld);
+boxObj.localToWorld(objectToWorld);
+let aa = ScreenToCamera.distanceTo(ScreenToCamera2);
+let distant = cameraToWorld.distanceTo(objectToWorld);
+
 /* EventListener with keyboard */
 document.addEventListener("keydown", onDocumentKeyDown, false);
 function onDocumentKeyDown(event) {
@@ -32,11 +41,14 @@ function onDocumentKeyDown(event) {
     let obj_mat = boxObj.matrix.clone();
     let mat_r; 
     let vec_pos = new THREE.Vector3();
-
+   
+    // OS --- model T ---> WS --- view T ---> CS --- projection T ---> PS --- viewport T ---> SS 
     // object.localToworld(point) : For a point in object's local space, this function will return the world coordinate of the point 
+    // object_position.project(camera) : Projects this vector from world space(object_position) into the camera's normalized device coordinate (NDC) space
     let a = boxObj.localToWorld(new THREE.Vector3()).project(camera);
     console.log((a.x+1)/2*window.innerWidth);
-    console.log(obj_mat);
+    //console.log(obj_mat);
+    //console.log(distant*aa);
 
     let keyCode = event.which;
     switch (keyCode) {
@@ -45,22 +57,22 @@ function onDocumentKeyDown(event) {
             break;
         case 87 : // w : move 10 px to the up
             vec_pos.setFromMatrixPosition(obj_mat);
-            vec_pos.y += 0.05; 
+            vec_pos.y += (distant*aa); 
             boxObj.matrix.copy(obj_mat.setPosition(vec_pos));
             break;
         case 83 : // s : move 10 px to the down
             vec_pos.setFromMatrixPosition(obj_mat);
-            vec_pos.y -= 0.05; 
+            vec_pos.y -= (distant*aa); 
             boxObj.matrix.copy(obj_mat.setPosition(vec_pos));
             break;
         case 65 : // a : move 10 px to the left
             vec_pos.setFromMatrixPosition(obj_mat);
-            vec_pos.x -= 0.05; 
+            vec_pos.x -= (distant*aa); 
             boxObj.matrix.copy(obj_mat.setPosition(vec_pos));
             break;
         case 68 : // d : move 10 px to the right
             vec_pos.setFromMatrixPosition(obj_mat);
-            vec_pos.x += 0.05; 
+            vec_pos.x += (distant*aa); 
             boxObj.matrix.copy(obj_mat.setPosition(vec_pos));
             break;
         case 32 : // space - move to origin, return to origin 
@@ -70,37 +82,37 @@ function onDocumentKeyDown(event) {
         case 82 : // r : 3 degree rotation in X 
             //boxObj.rotateX(3); same code
             //boxObj.rotation.y += (Math.PI / 180 * 3.0); 
-            mat_r = new THREE.Matrix4().makeRotationY(THREE.MathUtils.degToRad(30));
+            mat_r = new THREE.Matrix4().makeRotationY(THREE.MathUtils.degToRad(3));
             if (isCtrl % 2 == 0) obj_mat.multiply(mat_r);  // box 중심 축 roation  
             else obj_mat.premultiply(mat_r);               // screnn 보는 방향 중심 축 rotation  
             boxObj.matrix.copy(obj_mat);
             break;
         case 84 : // t : 3 degree rotation in Y
-            mat_r = new THREE.Matrix4().makeRotationX(THREE.MathUtils.degToRad(30));
+            mat_r = new THREE.Matrix4().makeRotationX(THREE.MathUtils.degToRad(3));
             if (isCtrl % 2 == 0) obj_mat.multiply(mat_r);
             else obj_mat.premultiply(mat_r); 
             boxObj.matrix.copy(obj_mat);
             break; 
         case 89 : // y : 3 degree rotation in Z
-            mat_r = new THREE.Matrix4().makeRotationZ(THREE.MathUtils.degToRad(30));
+            mat_r = new THREE.Matrix4().makeRotationZ(THREE.MathUtils.degToRad(3));
             if (isCtrl % 2 == 0) obj_mat.multiply(mat_r);
             else obj_mat.premultiply(mat_r); 
             boxObj.matrix.copy(obj_mat);
             break;
         case 80 : // p : -3 degree rotation in X
-            mat_r = new THREE.Matrix4().makeRotationY(THREE.MathUtils.degToRad(-30));
+            mat_r = new THREE.Matrix4().makeRotationY(THREE.MathUtils.degToRad(-3));
             if (isCtrl % 2 == 0) obj_mat.multiply(mat_r);
             else obj_mat.premultiply(mat_r); 
             boxObj.matrix.copy(obj_mat);
             break;  
         case 71 : // g : -3 degree rotation in Y
-            mat_r = new THREE.Matrix4().makeRotationX(THREE.MathUtils.degToRad(-30));
+            mat_r = new THREE.Matrix4().makeRotationX(THREE.MathUtils.degToRad(-3));
             if (isCtrl % 2 == 0) obj_mat.multiply(mat_r);
             else obj_mat.premultiply(mat_r); 
             boxObj.matrix.copy(obj_mat);      
             break; 
         case 72 : // h : -3 degree rotation in Z
-            mat_r = new THREE.Matrix4().makeRotationZ(THREE.MathUtils.degToRad(-30));
+            mat_r = new THREE.Matrix4().makeRotationZ(THREE.MathUtils.degToRad(-3));
             if (isCtrl % 2 == 0) obj_mat.multiply(mat_r);
             else obj_mat.premultiply(mat_r); 
             boxObj.matrix.copy(obj_mat);
