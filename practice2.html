@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "viewport" content="width=device-width, initial-scale=1.0">
+        <script src="./node_modules/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+        <script src="./node_modules/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+        <script src="./node_modules/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+        <script src="./node_modules/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+        <title> LAB2 :></title>
+    </head>
+    <body>
+        <script type="importmap">
+			{
+				"imports": {
+					"three": "./node_modules/three/build/three.module.js"
+				}
+			}
+		</script>
+        <div class="container">
+            <video class="input_video"></video>
+            <canvas class="output_canvas" width="1280px" height="720px"></canvas>
+        </div>
+        <script type="modul" src="practice2.js"></script>
+        <h1 id = "mytest">hello lab2</h1>
+    </body>
+</html>
