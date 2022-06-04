@@ -1,6 +1,6 @@
 import * as THREE from "./node_modules/three/build/three.module.js";
 import { OrbitControls } from "./node_modules/three/examples/jsm/controls/OrbitControls.js";  
-import { TRIANGULATION } from "./triangulation.js   ";
+import { TRIANGULATION } from "./triangulation.js";
 import { Line2 } from './node_modules/three/examples/jsm/lines/Line2.js';
 import { LineMaterial } from './node_modules/three/examples/jsm/lines/LineMaterial.js';
 import { LineGeometry } from './node_modules/three/examples/jsm/lines/LineGeometry.js';
